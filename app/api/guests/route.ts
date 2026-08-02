@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join } from "path";
+import { tmpdir } from "os";
 
 interface Guest {
   id: string;
@@ -10,18 +11,45 @@ interface Guest {
 }
 
 const GUESTS_FILE = join(process.cwd(), "data", "guests.json");
+const TMP_GUESTS_FILE = join(tmpdir(), "guests.json");
+
+let memoryGuestsCache: Guest[] | null = null;
 
 function readGuests(): Guest[] {
+  if (memoryGuestsCache) {
+    return memoryGuestsCache;
+  }
+  try {
+    if (existsSync(TMP_GUESTS_FILE)) {
+      const content = readFileSync(TMP_GUESTS_FILE, "utf-8");
+      memoryGuestsCache = JSON.parse(content);
+      return memoryGuestsCache!;
+    }
+  } catch {
+    // fallback to source file
+  }
+
   try {
     const content = readFileSync(GUESTS_FILE, "utf-8");
-    return JSON.parse(content);
+    memoryGuestsCache = JSON.parse(content);
+    return memoryGuestsCache!;
   } catch {
+    memoryGuestsCache = [];
     return [];
   }
 }
 
 function writeGuests(guests: Guest[]): void {
-  writeFileSync(GUESTS_FILE, JSON.stringify(guests, null, 2), "utf-8");
+  memoryGuestsCache = guests;
+  try {
+    writeFileSync(GUESTS_FILE, JSON.stringify(guests, null, 2), "utf-8");
+  } catch {
+    try {
+      writeFileSync(TMP_GUESTS_FILE, JSON.stringify(guests, null, 2), "utf-8");
+    } catch {
+      // Memory fallback active
+    }
+  }
 }
 
 function generateSlug(name: string): string {
