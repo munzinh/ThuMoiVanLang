@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
+import { connectToDatabase } from "@/lib/mongodb";
+import GuestModel from "@/models/Guest";
 
 interface Guest {
   id: string;
   name: string;
   slug: string;
+  refusalCount: number;
   createdAt: string;
 }
 
@@ -15,23 +18,29 @@ const TMP_GUESTS_FILE = join(tmpdir(), "guests.json");
 
 let memoryGuestsCache: Guest[] | null = null;
 
-function readGuests(): Guest[] {
+function readGuestsFile(): Guest[] {
   if (memoryGuestsCache) {
     return memoryGuestsCache;
   }
   try {
     if (existsSync(TMP_GUESTS_FILE)) {
       const content = readFileSync(TMP_GUESTS_FILE, "utf-8");
-      memoryGuestsCache = JSON.parse(content);
+      memoryGuestsCache = JSON.parse(content).map((g: any) => ({
+        ...g,
+        refusalCount: g.refusalCount || 0,
+      }));
       return memoryGuestsCache!;
     }
   } catch {
-    // fallback to source file
+    // fallback
   }
 
   try {
     const content = readFileSync(GUESTS_FILE, "utf-8");
-    memoryGuestsCache = JSON.parse(content);
+    memoryGuestsCache = JSON.parse(content).map((g: any) => ({
+      ...g,
+      refusalCount: g.refusalCount || 0,
+    }));
     return memoryGuestsCache!;
   } catch {
     memoryGuestsCache = [];
@@ -39,7 +48,7 @@ function readGuests(): Guest[] {
   }
 }
 
-function writeGuests(guests: Guest[]): void {
+function writeGuestsFile(guests: Guest[]): void {
   memoryGuestsCache = guests;
   try {
     writeFileSync(GUESTS_FILE, JSON.stringify(guests, null, 2), "utf-8");
@@ -66,8 +75,39 @@ function generateSlug(name: string): string {
 // GET: fetch all guests OR single guest by slug
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get("slug");
-  const guests = readGuests();
 
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      if (slug) {
+        const guest = await GuestModel.findOne({ slug }).lean();
+        if (!guest) return NextResponse.json({ error: "Not found" }, { status: 404 });
+        return NextResponse.json({
+          id: guest.id,
+          name: guest.name,
+          slug: guest.slug,
+          refusalCount: guest.refusalCount || 0,
+          createdAt: guest.createdAt,
+        });
+      }
+
+      const guests = await GuestModel.find({}).sort({ createdAt: -1 }).lean();
+      return NextResponse.json(
+        guests.map((g) => ({
+          id: g.id,
+          name: g.name,
+          slug: g.slug,
+          refusalCount: g.refusalCount || 0,
+          createdAt: g.createdAt,
+        }))
+      );
+    }
+  } catch (err) {
+    console.warn("MongoDB connection failed, falling back to local storage:", err);
+  }
+
+  // Fallback to file/memory storage
+  const guests = readGuestsFile();
   if (slug) {
     const guest = guests.find((g) => g.slug === slug);
     if (!guest) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -86,27 +126,107 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
   }
 
-  const guests = readGuests();
-  const slug = generateSlug(name.trim());
+  const trimmedName = name.trim();
+  const baseSlug = generateSlug(trimmedName);
 
-  // Check if slug already exists
-  let finalSlug = slug;
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      let finalSlug = baseSlug;
+      let counter = 1;
+      while (await GuestModel.exists({ slug: finalSlug })) {
+        finalSlug = `${baseSlug}-${counter++}`;
+      }
+
+      const id = Date.now().toString();
+      const newGuestDoc = await GuestModel.create({
+        id,
+        name: trimmedName,
+        slug: finalSlug,
+        refusalCount: 0,
+        createdAt: new Date(),
+      });
+
+      return NextResponse.json(
+        {
+          id: newGuestDoc.id,
+          name: newGuestDoc.name,
+          slug: newGuestDoc.slug,
+          refusalCount: newGuestDoc.refusalCount,
+          createdAt: newGuestDoc.createdAt,
+        },
+        { status: 201 }
+      );
+    }
+  } catch (err) {
+    console.warn("MongoDB fallback on POST:", err);
+  }
+
+  // Fallback to local storage
+  const guests = readGuestsFile();
+  let finalSlug = baseSlug;
   let counter = 1;
   while (guests.some((g) => g.slug === finalSlug)) {
-    finalSlug = `${slug}-${counter++}`;
+    finalSlug = `${baseSlug}-${counter++}`;
   }
 
   const newGuest: Guest = {
     id: Date.now().toString(),
-    name: name.trim(),
+    name: trimmedName,
     slug: finalSlug,
+    refusalCount: 0,
     createdAt: new Date().toISOString(),
   };
 
   guests.push(newGuest);
-  writeGuests(guests);
+  writeGuestsFile(guests);
 
   return NextResponse.json(newGuest, { status: 201 });
+}
+
+// PATCH: increment refusalCount for a guest by slug or id
+export async function PATCH(req: NextRequest) {
+  const body = await req.json().catch(() => ({}));
+  const slug = body.slug || req.nextUrl.searchParams.get("slug");
+  const id = body.id || req.nextUrl.searchParams.get("id");
+
+  if (!slug && !id) {
+    return NextResponse.json({ error: "Slug or ID required" }, { status: 400 });
+  }
+
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      const query = slug ? { slug } : { id };
+      const updated = await GuestModel.findOneAndUpdate(
+        query,
+        { $inc: { refusalCount: 1 } },
+        { new: true }
+      ).lean();
+
+      if (updated) {
+        return NextResponse.json({
+          id: updated.id,
+          name: updated.name,
+          slug: updated.slug,
+          refusalCount: updated.refusalCount,
+        });
+      }
+    }
+  } catch (err) {
+    console.warn("MongoDB fallback on PATCH:", err);
+  }
+
+  // Fallback to local storage
+  const guests = readGuestsFile();
+  const guestIndex = guests.findIndex((g) => (slug ? g.slug === slug : g.id === id));
+  if (guestIndex !== -1) {
+    guests[guestIndex].refusalCount = (guests[guestIndex].refusalCount || 0) + 1;
+    writeGuestsFile(guests);
+    return NextResponse.json(guests[guestIndex]);
+  }
+
+  return NextResponse.json({ error: "Guest not found" }, { status: 404 });
 }
 
 // DELETE: remove guest by id
@@ -114,13 +234,26 @@ export async function DELETE(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
-  const guests = readGuests();
+  try {
+    const conn = await connectToDatabase();
+    if (conn) {
+      const result = await GuestModel.deleteOne({ id });
+      if (result.deletedCount > 0) {
+        return NextResponse.json({ success: true });
+      }
+    }
+  } catch (err) {
+    console.warn("MongoDB fallback on DELETE:", err);
+  }
+
+  // Fallback to local storage
+  const guests = readGuestsFile();
   const filtered = guests.filter((g) => g.id !== id);
 
   if (filtered.length === guests.length) {
     return NextResponse.json({ error: "Guest not found" }, { status: 404 });
   }
 
-  writeGuests(filtered);
+  writeGuestsFile(filtered);
   return NextResponse.json({ success: true });
 }

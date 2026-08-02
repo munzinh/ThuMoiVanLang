@@ -61,6 +61,17 @@ export default function InvitationPage({ params }: { params: Promise<{ slug: str
 
   const [dodgePos, setDodgePos] = useState<{ x: number; y: number } | null>(null);
 
+  const recordRefusal = () => {
+    if (!slug) return;
+    try {
+      fetch("/api/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug }),
+      }).catch(() => {});
+    } catch {}
+  };
+
   const dodgeButton = (e?: React.SyntheticEvent) => {
     if (e) {
       e.preventDefault();
@@ -76,6 +87,7 @@ export default function InvitationPage({ params }: { params: Promise<{ slug: str
     let ry = (Math.random() - 0.5) * 2 * maxY;
 
     setDodgePos({ x: rx, y: ry });
+    recordRefusal();
   };
 
   /* ── Confetti ── */

@@ -9,6 +9,7 @@ interface Guest {
   id: string;
   name: string;
   slug: string;
+  refusalCount?: number;
   createdAt: string;
 }
 
@@ -194,6 +195,12 @@ export default function AdminPage() {
             </span>
             <span className="pixel-label">Kết quả tìm kiếm</span>
           </div>
+          <div className={styles.statCard + " pixel-box-purple"}>
+            <span className={styles.statNumber} style={{ color: "var(--pixel-red, #ff4757)" }}>
+              {guests.reduce((sum, g) => sum + (g.refusalCount || 0), 0)}
+            </span>
+            <span className="pixel-label">Lượt ấn/né từ chối</span>
+          </div>
         </div>
 
         {/* Add Guest */}
@@ -254,6 +261,7 @@ export default function AdminPage() {
                     <th>STT</th>
                     <th>Tên Khách Mời</th>
                     <th>Link Thư Mời</th>
+                    <th style={{ textAlign: "center" }}>Lượt Né/Từ Chối</th>
                     <th>Thao Tác</th>
                   </tr>
                 </thead>
@@ -277,6 +285,21 @@ export default function AdminPage() {
                         >
                           /{guest.slug}
                         </a>
+                      </td>
+                      <td style={{ textAlign: "center" }}>
+                        <span
+                          style={{
+                            display: "inline-block",
+                            padding: "2px 8px",
+                            borderRadius: "12px",
+                            backgroundColor: (guest.refusalCount || 0) > 0 ? "#ff475722" : "#ffffff11",
+                            color: (guest.refusalCount || 0) > 0 ? "#ff4757" : "#aaa",
+                            fontWeight: "bold",
+                            border: `1px solid ${(guest.refusalCount || 0) > 0 ? "#ff475766" : "#444"}`
+                          }}
+                        >
+                          {guest.refusalCount || 0} lần
+                        </span>
                       </td>
                       <td>
                         <div className={styles.actionBtns}>
