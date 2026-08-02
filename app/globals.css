@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap');
+
+/* =============================================
+   VĂN LANG — WARM PINK/CREAM PIXEL THEME
+   ============================================= */
+:root {
+  /* Warm palette matching reference */
+  --cream:       #FFF0E6;
+  --cream2:      #F5E0D0;
+  --peach:       #F0C8B4;
+  --red:         #C41E3A;
+  --red-dark:    #8B0000;
+  --red-light:   #E8636A;
+  --red-soft:    #F5AAAA;
+  --pink:        #E8B4B8;
+  --pink-light:  #F8DDE0;
+  --gold:        #C8943E;
+  --gold-dark:   #8B6414;
+  --gold-light:  #F0C878;
+  --brown:       #5C2D1E;
+  --brown-light: #8B4A35;
+
+  /* Text */
+  --text:        #3D1515;
+  --text-dim:    #7A4040;
+  --text-light:  #C4908A;
+  --text-white:  #FFF5EE;
+
+  /* Fonts */
+  --font-serif:    'Playfair Display', Georgia, serif;
+  --font-script:   'Alex Brush', 'Dancing Script', cursive;
+  --font-body:     'Plus Jakarta Sans', 'Be Vietnam Pro', sans-serif;
+
+  /* Shadows */
+  --shadow-red:  3px 3px 0 var(--red-dark);
+  --shadow-gold: 2px 2px 0 var(--gold-dark);
+  --glow-red: 0 0 15px rgba(196,30,58,0.35);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+/* ── Pixel divider ── */
+.px-divider {
+  display: flex; align-items: center; gap: 10px; margin: 4px 0;
+}
+.px-divider::before, .px-divider::after {
+  content: ''; flex: 1; height: 2px;
+  background: repeating-linear-gradient(
+    90deg, var(--red) 0, var(--red) 5px, transparent 5px, transparent 10px
+  );
+}
+.px-divider span { color: var(--red); font-size: 12px; }
+
+/* ── Pixel box ── */
+.px-box {
+  background: rgba(255,245,238,0.85);
+  border: 2px solid var(--red);
+  box-shadow: 3px 3px 0 var(--red-dark);
+  padding: 16px;
+  backdrop-filter: blur(4px);
+  position: relative;
+}
+.px-box::before {
+  content: '◆'; position: absolute; top: -10px; left: -10px;
+  font-family: var(--font-pixel); font-size: 8px; color: var(--red);
+}
+.px-box::after {
+  content: '◆'; position: absolute; bottom: -10px; right: -10px;
+  font-family: var(--font-pixel); font-size: 8px; color: var(--red);
+}
+
+/* ── Pixel button ── */
+.px-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px;
+  font-family: var(--font-pixel-vn); font-size: 15px; font-weight: 700;
+  text-decoration: none; border: 2px solid; cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+  letter-spacing: 0.3px; outline: none;
+}
+.px-btn:active { transform: translate(2px,2px) !important; }
+
+.px-btn-red {
+  background: var(--red); color: #fff; border-color: var(--red-dark);
+  box-shadow: 3px 3px 0 var(--red-dark);
+}
+.px-btn-red:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--red-dark); }
+
+.px-btn-gold {
+  background: var(--cream); color: var(--red); border-color: var(--gold);
+  box-shadow: 3px 3px 0 var(--gold-dark);
+}
+.px-btn-gold:hover { background: var(--gold-light); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--gold-dark); }
+
+.px-btn-outline {
+  background: transparent; color: var(--red); border-color: var(--red);
+  box-shadow: 2px 2px 0 var(--red-dark);
+}
+.px-btn-outline:hover { background: var(--pink-light); }
+
+/* ── Animations ── */
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes blink { 0%,49% { opacity:1; } 50%,100% { opacity:0; } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes sparkle { 0%,100% { transform:scale(0.7) rotate(0deg); opacity:0.3; } 50% { transform:scale(1.3) rotate(45deg); opacity:1; } }
+@keyframes slideRight { from { transform:translateX(-100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@keyframes slideLeft { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@keyframes envelopeOpen {
+  0% { transform: scaleY(1); }
+  30% { transform: scaleY(0.95) translateY(-4px); }
+  100% { transform: scaleY(1) translateY(-20px); opacity:0; }
+}
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes glowPulse {
+  0%,100% { text-shadow: 2px 2px 0 var(--red-dark); }
+  50% { text-shadow: 2px 2px 0 var(--red-dark), 0 0 20px rgba(196,30,58,0.5); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.anim-float { animation: float 3s ease-in-out infinite; }
+.anim-fadeup { animation: fadeUp 0.6s ease-out forwards; }
+.anim-fadein { animation: fadeIn 0.5s ease-out forwards; }
+.anim-blink { animation: blink 1s step-end infinite; }
+.anim-sparkle { animation: sparkle var(--dur, 2s) ease-in-out infinite; animation-delay: var(--del, 0s); }
+.anim-bounce { animation: bounce 1.5s ease-in-out infinite; }
+.anim-glow { animation: glowPulse 2s ease-in-out infinite; }

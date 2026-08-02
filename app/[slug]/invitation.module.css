@@ -1,0 +1,942 @@
+/* ════════════════════════════════════════
+   INVITATION MODULE CSS
+   Warm Pink / Cream / Van Lang Red theme
+   ════════════════════════════════════════ */
+
+/* ── Shared ── */
+.confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 14px;
+  color: var(--red);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ════════════════════════════
+   LOADING
+   ════════════════════════════ */
+.loadingScreen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  position: relative;
+}
+
+.loadingBox,
+.notFoundBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 40px 32px;
+  text-align: center;
+  background: var(--cream2);
+  border: 2px solid var(--red);
+  box-shadow: 4px 4px 0 var(--red-dark);
+  max-width: 320px;
+  width: 90%;
+}
+
+.loadingEnvelope {
+  font-size: 48px;
+  color: var(--red);
+  animation: float 2s ease-in-out infinite;
+  font-family: var(--font-pixel);
+}
+
+.loadingText {
+  font-family: var(--font-pixel-vn);
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.loadingCursor {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  color: var(--red);
+}
+
+.errorCode {
+  font-family: var(--font-pixel);
+  font-size: 64px;
+  color: var(--red);
+  text-shadow: 4px 4px 0 var(--red-dark);
+  line-height: 1;
+}
+
+.errorMsg {
+  font-family: var(--font-pixel-vn);
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ════════════════════════════
+   STEP 1 — ENVELOPE
+   ════════════════════════════ */
+.envelopeScreen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(196, 30, 58, 0.08) 0%, transparent 60%),
+    var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 40px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pixel grid texture */
+.envelopeScreen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(196, 30, 58, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 30, 58, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.envHeaderBlock {
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.envUnivBadge {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--red);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 3px;
+}
+
+.envMainTitle {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 1px;
+  margin-top: 4px;
+  text-shadow: 1px 1px 0 rgba(196, 30, 58, 0.15);
+}
+
+.envSubFrom {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.envFromLabel {
+  font-family: var(--font-script);
+  font-size: 26px;
+  color: var(--text-dim);
+}
+
+.envOwnerName {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--red);
+}
+
+/* The envelope button */
+.envelopeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  outline: none;
+  animation: float 2.5s ease-in-out infinite;
+  transition: transform 0.2s;
+  margin: 12px 0;
+}
+
+.envelopeBtn:hover {
+  transform: scale(1.05) translateY(-4px);
+}
+
+.envelopeOpening {
+  animation: envelopeOpen 0.7s ease-out forwards !important;
+}
+
+.envelopeBody {
+  width: 250px;
+  height: 175px;
+  position: relative;
+  filter: drop-shadow(4px 10px 20px rgba(196, 30, 58, 0.22));
+}
+
+/* Envelope front (bottom part) */
+.envFront {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FFF5EE, #F8DDE0);
+  border: 3px solid var(--red);
+  box-shadow: 4px 4px 0 var(--red-dark);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* V-shaped fold lines */
+.envFront::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+      transparent 49.5%, rgba(196, 30, 58, 0.12) 49.5%, rgba(196, 30, 58, 0.12) 50.5%, transparent 50.5%);
+}
+
+.envFront::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-135deg,
+      transparent 49.5%, rgba(196, 30, 58, 0.12) 49.5%, rgba(196, 30, 58, 0.12) 50.5%, transparent 50.5%);
+}
+
+/* Flap (top triangle) */
+.envFlap {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  height: 92px;
+  background: linear-gradient(160deg, #F8DDE0, #F0C8B4);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-top: 3px solid var(--red);
+  transform-origin: top center;
+  transition: transform 0.5s ease;
+  z-index: 1;
+}
+
+.envFlapOpen {
+  transform: rotateX(180deg);
+}
+
+/* Wax seal */
+.envSeal {
+  position: relative;
+  z-index: 2;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #E8636A, var(--red) 70%, var(--red-dark));
+  border: 3px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.3), 0 0 15px rgba(196, 30, 58, 0.3);
+  letter-spacing: 1px;
+}
+
+/* Letter peeking */
+.envLetter {
+  position: absolute;
+  top: -36px;
+  left: 16px;
+  right: 16px;
+  background: var(--cream);
+  border: 2px solid var(--red);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--red);
+  letter-spacing: 1px;
+  animation: fadeUp 0.3s ease;
+  z-index: 3;
+}
+
+/* Tap hint */
+.envTapHint {
+  z-index: 2;
+  text-align: center;
+  transition: opacity 0.3s;
+}
+
+.envHintText {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: rgba(255, 245, 238, 0.8);
+  border: 1px solid var(--pink);
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+
+/* Action Buttons & Dodging Refuse Button */
+.envActionRow {
+  z-index: 5;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+}
+
+.envAcceptBtn {
+  background: var(--red);
+  color: #fff;
+  border: 2px solid var(--red-dark);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 24px;
+  box-shadow: 2px 3px 0 var(--red-dark);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  white-space: nowrap;
+}
+
+.envAcceptBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 4px 0 var(--red-dark);
+}
+
+.envRefuseBtn {
+  background: rgba(255, 245, 238, 0.95);
+  color: var(--text-dim);
+  border: 2px solid var(--pink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  white-space: nowrap;
+}
+
+.envBottomDeco {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 70%;
+  color: var(--red);
+  font-size: 14px;
+}
+
+.envLine {
+  flex: 1;
+  height: 1.5px;
+  background: var(--red);
+  opacity: 0.6;
+}
+
+.envStar {
+  color: var(--red);
+  font-size: 12px;
+}
+
+/* ════════════════════════════
+   STEP 2 — INVITATION
+   ════════════════════════════ */
+.invitePage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.bgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 240, 230, 0.55);
+}
+
+.inviteScroll {
+  position: relative;
+  z-index: 1;
+  padding: 16px 20px 48px;
+  max-width: 460px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+/* VL Logo */
+.inviteHeader {
+  padding-top: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.vlLogoSingleLine {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--red);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 3px;
+}
+
+/* Title block */
+.inviteTitle {
+  width: 100%;
+}
+
+.inviteTitleSub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.guestNameBig {
+  font-family: var(--font-body);
+  font-size: 25px;
+  font-weight: 800;
+  color: var(--red);
+  text-shadow: 1px 1px 0 var(--red-dark);
+  margin: 4px 0;
+  line-height: 1.3;
+}
+
+.inviteTitleSub2 {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* Event title */
+.eventTitleBox {
+  border: 2px solid var(--red);
+  box-shadow: 3px 3px 0 var(--red-dark);
+  padding: 12px 18px;
+  width: 100%;
+  background: rgba(255, 245, 238, 0.88);
+  backdrop-filter: blur(4px);
+}
+
+.eventBig {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--red);
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+
+.eventScript {
+  font-family: var(--font-script);
+  font-size: 24px;
+  color: var(--brown-light);
+  margin-top: 2px;
+}
+
+/* Owner Avatar & Info */
+.ownerBlock {
+  width: 100%;
+}
+
+.ownerAvatarWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.ownerAvatarImg {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--red);
+  box-shadow: 0 0 0 3px var(--gold), 3px 3px 0 var(--red-dark);
+  object-fit: cover;
+  object-position: center top;
+}
+
+.ownerFrom {
+  font-family: var(--font-script);
+  font-size: 22px;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
+.ownerNameText {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--red);
+  margin-top: 2px;
+}
+
+.ownerUniv {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brown-light);
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+.ownerAddress {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* Time/date pills */
+.timeDateRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 245, 238, 0.9);
+  border: 2px solid var(--red);
+  box-shadow: 2px 2px 0 var(--red-dark);
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  backdrop-filter: blur(4px);
+}
+
+/* Thank you */
+.thankBox {
+  background: rgba(255, 245, 238, 0.85);
+  border: 2px dashed var(--pink);
+  padding: 18px;
+  width: 100%;
+  backdrop-filter: blur(4px);
+}
+
+.thankText {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.thankScript {
+  font-family: var(--font-script);
+  font-size: 30px;
+  color: var(--red);
+}
+
+/* CTA */
+.ctaBlock {
+  width: 100%;
+  margin-top: 150px;
+  /* Đẩy nút xuống khoảng 2-3cm */
+}
+
+.ctaBtn {
+  width: 100%;
+  font-size: 16px !important;
+  padding: 15px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 800 !important;
+}
+
+/* Bottom */
+.bottomDeco {
+  padding: 8px 0;
+}
+
+.bottomBuilding {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+/* ════════════════════════════
+   STEP 3 — INFO
+   ════════════════════════════ */
+.infoPage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(196, 30, 58, 0.06) 0%, transparent 50%),
+    var(--cream);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.infoPage::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(196, 30, 58, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 30, 58, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sticky header */
+.infoHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: rgba(255, 240, 230, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.12);
+}
+
+.backBtn {
+  background: none;
+  border: 2px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-pixel-vn);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--red-dark);
+  white-space: nowrap;
+}
+
+.backBtn:hover {
+  background: var(--pink-light);
+}
+
+.infoHeaderTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-pixel-vn);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.infoHeaderIcon {
+  font-size: 18px;
+}
+
+/* Scroll content */
+.infoScroll {
+  padding: 20px 18px 48px;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Cards */
+.infoCard {
+  /* inherits px-box */
+}
+
+.infoCardTitle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--red);
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px dashed rgba(196, 30, 58, 0.22);
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.infoRowIcon {
+  font-size: 18px;
+  min-width: 24px;
+  margin-top: 1px;
+}
+
+.infoLabel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.infoValue {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  display: block;
+  line-height: 1.4;
+}
+
+.infoValueRed {
+  color: var(--red) !important;
+}
+
+.infoValueSub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-dim);
+  display: block;
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* Travel */
+.sectionTitle {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--red);
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+.travelBtnGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.travelBtn {
+  width: 100%;
+  font-size: 14px !important;
+  padding: 12px 6px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+}
+
+/* Map grid */
+.mapGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mapCard {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--pink);
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: var(--cream2);
+}
+
+.mapCard:hover {
+  border-color: var(--red);
+  box-shadow: 2px 2px 0 var(--red-dark);
+}
+
+.mapCardLabel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dim);
+  padding: 6px 8px;
+  text-align: center;
+}
+
+/* Parking note */
+.parkingNote {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: rgba(196, 30, 58, 0.06);
+  border: 1px solid var(--pink);
+  border-left: 3px solid var(--red);
+  padding: 10px 12px;
+}
+
+.parkingNote span {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.parkingNote p {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Contact */
+.contactRow {
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(196, 30, 58, 0.22);
+}
+
+.contactRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.contactName {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  display: block;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+.contactPhone {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--red);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contactPhone:hover {
+  color: var(--brown-light);
+}
+
+/* Back btn */
+.backToInvBtn {
+  font-size: 14px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+}
+
+/* ── Keyframes ── */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0)
+  }
+
+  50% {
+    transform: translateY(-8px)
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px)
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0)
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes envelopeOpen {
+  0% {
+    transform: scale(1);
+    opacity: 1
+  }
+
+  40% {
+    transform: scale(1.05) translateY(-8px);
+    opacity: 1
+  }
+
+  100% {
+    transform: scale(0.8) translateY(-40px);
+    opacity: 0
+  }
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    text-shadow: 2px 2px 0 var(--red-dark)
+  }
+
+  50% {
+    text-shadow: 2px 2px 0 var(--red-dark), 0 0 20px rgba(196, 30, 58, 0.5)
+  }
+}

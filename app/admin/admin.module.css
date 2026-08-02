@@ -1,0 +1,206 @@
+/* Admin Page Module CSS */
+
+.adminPage {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+}
+
+.loginBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 48px 40px;
+  max-width: 440px;
+  width: 100%;
+}
+
+.loginIcon {
+  font-size: 48px;
+  text-align: center;
+  filter: drop-shadow(0 0 10px var(--pixel-gold));
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Main Layout */
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Stats */
+.statsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  border: 3px solid var(--pixel-purple);
+  background: var(--bg-card);
+  box-shadow: 4px 4px 0 #5a1e8a;
+  text-align: center;
+}
+
+.statNumber {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(28px, 6vw, 48px);
+  color: var(--pixel-gold);
+  text-shadow: 3px 3px 0 var(--pixel-gold-dark);
+  line-height: 1;
+}
+
+/* Add Section */
+.addSection {
+  padding: 28px;
+}
+
+.addForm {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Search */
+.searchRow {
+  display: flex;
+}
+
+.searchRow input {
+  width: 100%;
+}
+
+/* Table */
+.tableSection {
+  padding: 28px;
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.slugLink {
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  color: var(--pixel-cyan);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.slugLink:hover {
+  color: var(--pixel-gold);
+  text-decoration: underline;
+}
+
+.actionBtns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.smallBtn {
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  min-width: 40px;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  padding: 14px 20px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  z-index: 100;
+  animation: pixelFadeIn 0.3s ease-out;
+  border: 3px solid;
+  box-shadow: 4px 4px 0;
+}
+
+.notifSuccess {
+  background: var(--bg-card);
+  border-color: var(--pixel-green);
+  color: var(--pixel-green);
+  box-shadow: 4px 4px 0 #037a5d;
+}
+
+.notifError {
+  background: var(--bg-card);
+  border-color: var(--pixel-red);
+  color: var(--pixel-red);
+  box-shadow: 4px 4px 0 #8a0d1e;
+}
+
+/* Preview note */
+.previewNote {
+  padding: 24px;
+  border: 3px solid var(--pixel-purple);
+  background: var(--bg-card);
+  box-shadow: 4px 4px 0 #5a1e8a;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 500px) {
+  .loginBox {
+    padding: 32px 24px;
+  }
+
+  .addForm {
+    flex-direction: column;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+}
