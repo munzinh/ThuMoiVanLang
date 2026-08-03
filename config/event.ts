@@ -16,7 +16,7 @@ export const EVENT_CONFIG = {
   address: "69/68 Đặng Thúy Trâm, P. Bình Lợi Trung, TP. Hồ Chí Minh",
 
   // Link Google Maps (cập nhật sau)
-  googleMapsUrl: "https://maps.app.goo.gl/FBbgkpVtbLnkLVFM91",
+  googleMapsUrl: "https://maps.app.goo.gl/SjeKddr9b8YFYAJp9",
 
   // Link video hướng dẫn (cập nhật sau)
   directionVideoUrl: "https://www.facebook.com/share/v/19PEshZ6uK/?mibextid=wwXIfr",
