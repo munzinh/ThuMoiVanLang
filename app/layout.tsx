@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Thư Mời Tham Dự Lễ Bảo Vệ Đồ Án Tốt Nghiệp",
-  description: "Trân trọng kính mời bạn tham dự buổi lễ bảo vệ đồ án tốt nghiệp đại học.",
+  title: "Thư Mời Tham Dự Lễ Tốt Nghiệp",
+  description: "Bảo Minh trân trọng mời bạn tham dự lễ tốt nghiệp.",
   openGraph: {
     title: "Thư Mời Tốt Nghiệp",
-    description: "Bạn được mời tham dự lễ bảo vệ đồ án tốt nghiệp",
+    description: "Bảo Minh trân trọng mời bạn tham dự lễ tốt nghiệp",
     type: "website",
   },
 };
