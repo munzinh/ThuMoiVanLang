@@ -1,14 +1,10 @@
 import mongoose from "mongoose";
-import dns from "dns";
 
-// Ensure SRV records can be resolved smoothly in local dev environments
-try {
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
-} catch {
-  // Ignore in environments where setting DNS servers is restricted
+const MONGODB_URI = process.env.MONGODB_URI?.trim() || "";
+
+function isPlaceholderUri(uri: string) {
+  return /<[^>]+>/.test(uri);
 }
-
-const MONGODB_URI = process.env.MONGODB_URI || "";
 
 if (!global.mongooseCache) {
   global.mongooseCache = { conn: null, promise: null };
@@ -16,8 +12,11 @@ if (!global.mongooseCache) {
 
 export async function connectToDatabase() {
   if (!MONGODB_URI) {
-    // Returns null if no MongoDB URI is set yet, allowing file/memory fallback
-    return null;
+    throw new Error("MONGODB_URI is not configured. Set it in Vercel Environment Variables or your local .env file.");
+  }
+
+  if (isPlaceholderUri(MONGODB_URI)) {
+    throw new Error("MONGODB_URI still contains placeholder values. Replace <username> and <password> with real MongoDB Atlas credentials.");
   }
 
   if (global.mongooseCache.conn) {
@@ -27,6 +26,7 @@ export async function connectToDatabase() {
   if (!global.mongooseCache.promise) {
     const opts = {
       bufferCommands: false,
+      serverSelectionTimeoutMS: 10000,
     };
 
     global.mongooseCache.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {

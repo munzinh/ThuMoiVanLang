@@ -18,6 +18,10 @@ const TMP_GUESTS_FILE = join(tmpdir(), "guests.json");
 
 let memoryGuestsCache: Guest[] | null = null;
 
+function shouldUseLocalFallback() {
+  return process.env.NODE_ENV !== "production" || process.env.VERCEL !== "1";
+}
+
 function readGuestsFile(): Guest[] {
   if (memoryGuestsCache) {
     return memoryGuestsCache;
@@ -103,10 +107,13 @@ export async function GET(req: NextRequest) {
       );
     }
   } catch (err) {
-    console.warn("MongoDB connection failed, falling back to local storage:", err);
+    console.error("MongoDB connection failed:", err);
+    if (!shouldUseLocalFallback()) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
   }
 
-  // Fallback to file/memory storage
+  // Fallback to file/memory storage in local development only
   const guests = readGuestsFile();
   if (slug) {
     const guest = guests.find((g) => g.slug === slug);
@@ -159,10 +166,13 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (err) {
-    console.warn("MongoDB fallback on POST:", err);
+    console.error("MongoDB save failed:", err);
+    if (!shouldUseLocalFallback()) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
   }
 
-  // Fallback to local storage
+  // Fallback to local storage in local development only
   const guests = readGuestsFile();
   let finalSlug = baseSlug;
   let counter = 1;
@@ -214,10 +224,13 @@ export async function PATCH(req: NextRequest) {
       }
     }
   } catch (err) {
-    console.warn("MongoDB fallback on PATCH:", err);
+    console.error("MongoDB update failed:", err);
+    if (!shouldUseLocalFallback()) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
   }
 
-  // Fallback to local storage
+  // Fallback to local storage in local development only
   const guests = readGuestsFile();
   const guestIndex = guests.findIndex((g) => (slug ? g.slug === slug : g.id === id));
   if (guestIndex !== -1) {
@@ -243,10 +256,13 @@ export async function DELETE(req: NextRequest) {
       }
     }
   } catch (err) {
-    console.warn("MongoDB fallback on DELETE:", err);
+    console.error("MongoDB delete failed:", err);
+    if (!shouldUseLocalFallback()) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
   }
 
-  // Fallback to local storage
+  // Fallback to local storage in local development only
   const guests = readGuestsFile();
   const filtered = guests.filter((g) => g.id !== id);
 
