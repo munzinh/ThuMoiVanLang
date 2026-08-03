@@ -811,6 +811,64 @@
   text-align: center;
 }
 
+.popupOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 200;
+}
+
+.popupContent {
+  position: relative;
+  width: min(100%, 620px);
+  max-height: min(100%, 92vh);
+  background: rgba(255, 250, 244, 0.98);
+  border: 2px solid var(--red);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 16px;
+}
+
+.popupCloseBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--red);
+  background: var(--cream);
+  color: var(--red);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 var(--red-dark);
+}
+
+.popupTitle {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--red);
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.popupImageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--cream2);
+  border: 1px solid rgba(196, 30, 58, 0.15);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
 /* Parking note */
 .parkingNote {
   display: flex;

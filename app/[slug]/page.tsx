@@ -60,6 +60,7 @@ export default function InvitationPage({ params }: { params: Promise<{ slug: str
   }, [slug]);
 
   const [dodgePos, setDodgePos] = useState<{ x: number; y: number } | null>(null);
+  const [popupImage, setPopupImage] = useState<{ url: string; title: string } | null>(null);
 
   const recordRefusal = () => {
     if (!slug) return;
@@ -70,6 +71,14 @@ export default function InvitationPage({ params }: { params: Promise<{ slug: str
         body: JSON.stringify({ slug }),
       }).catch(() => {});
     } catch {}
+  };
+
+  const openImagePopup = (url: string, title: string) => {
+    setPopupImage({ url, title });
+  };
+
+  const closeImagePopup = () => {
+    setPopupImage(null);
   };
 
   const dodgeButton = (e?: React.SyntheticEvent) => {
@@ -378,16 +387,24 @@ export default function InvitationPage({ params }: { params: Promise<{ slug: str
         <div className={`anim-fadeup`} style={{ animationDelay: "0.2s" }}>
           <div className={styles.sectionTitle}>► SƠ ĐỒ</div>
           <div className={styles.mapGrid}>
-            <a href={EVENT_CONFIG.mapImageUrl} target="_blank" className={styles.mapCard}>
+            <button
+              type="button"
+              className={styles.mapCard}
+              onClick={() => openImagePopup(EVENT_CONFIG.mapImageUrl, "Sơ đồ trường")}
+            >
               <Image src={EVENT_CONFIG.mapImageUrl} alt="Sơ đồ trường" width={300} height={160}
                 style={{ width: "100%", height: 140, objectFit: "cover" }} />
               <span className={styles.mapCardLabel}>Sơ đồ trường</span>
-            </a>
-            <a href={EVENT_CONFIG.parkingImageUrl} target="_blank" className={styles.mapCard}>
+            </button>
+            <button
+              type="button"
+              className={styles.mapCard}
+              onClick={() => openImagePopup(EVENT_CONFIG.parkingImageUrl, "Hướng dẫn đậu xe")}
+            >
               <Image src={EVENT_CONFIG.parkingImageUrl} alt="Hướng dẫn đậu xe" width={300} height={160}
                 style={{ width: "100%", height: 140, objectFit: "cover" }} />
               <span className={styles.mapCardLabel}>Hướng dẫn đậu xe</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -403,6 +420,25 @@ export default function InvitationPage({ params }: { params: Promise<{ slug: str
             </div>
           ))}
         </div>
+
+        {popupImage && (
+          <div className={styles.popupOverlay} onClick={closeImagePopup}>
+            <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
+              <button className={styles.popupCloseBtn} onClick={closeImagePopup} aria-label="Đóng ảnh">
+                ×
+              </button>
+              <div className={styles.popupTitle}>{popupImage.title}</div>
+              <div className={styles.popupImageWrapper}>
+                <Image
+                  src={popupImage.url}
+                  alt={popupImage.title}
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Back to invite */}
         <div style={{ textAlign: "center", paddingBottom: 32 }}>
